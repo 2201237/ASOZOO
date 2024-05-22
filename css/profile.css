@@ -1,0 +1,147 @@
+body {
+  background-color: #f0f8ff; /* 背景色を薄いアクアに設定 */
+  font-family: 'Arial', sans-serif;
+  margin: 0;
+  padding: 0;
+  color: #333;
+}
+
+/* Header Styles */
+header {
+  width: 80%;
+  margin: 0 auto;
+  padding: 20px 0;
+  background-color: #fff;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.header-inner {
+  display: flex; 
+  justify-content: space-between;
+  align-items: center; 
+}
+
+.header-inner h1 {
+  font-size: 24px;
+  margin: 0;
+  color: #007bff;
+}
+
+/* Profile Container */
+.profile-container {
+  width: 80%;
+  margin: 20px auto;
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.profile-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.profile-icon {
+  border-radius: 50%;
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
+  margin-right: 20px;
+}
+
+.profile-name {
+  font-size: 28px;
+  color: #333;
+}
+
+/* Profile Details */
+.profile-details h3 {
+  font-size: 20px;
+  color: #007bff;
+  margin-bottom: 10px;
+}
+
+.profile-details textarea, .profile-details select {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 20px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 16px;
+  background-color: #f9f9f9;
+}
+
+.profile-details button {
+  background-color: #007bff;
+  color: #fff;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 4px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.profile-details button:hover {
+  background-color: #0056b3;
+}
+
+/* YouTube Posts */
+.youtube-posts h3 {
+  font-size: 20px;
+  color: #007bff;
+  margin-bottom: 20px;
+}
+
+.youtube-video {
+  margin-bottom: 20px;
+}
+
+.youtube-video iframe {
+  width: 100%;
+  border-radius: 8px;
+  border: none;
+}
+
+.video-description {
+  font-size: 16px;
+  color: #666;
+  margin-top: 10px;
+}
+
+/* Responsive Design */
+@media screen and (max-width: 768px) {
+  .profile-container {
+    width: 95%;
+  }
+
+  .profile-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .profile-icon {
+    width: 80px;
+    height: 80px;
+    margin-right: 0;
+    margin-bottom: 10px;
+  }
+
+  .profile-name {
+    font-size: 24px;
+  }
+
+  .profile-details textarea, .profile-details select {
+    font-size: 14px;
+  }
+
+  .profile-details button {
+    width: 100%;
+  }
+
+  .youtube-video iframe {
+    height: 200px;
+  }
+}

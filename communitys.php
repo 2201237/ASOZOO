@@ -11,14 +11,11 @@
     <?php
         $pdo=new PDO($connect, USER, PASS);
         echo '<form action="community_create.php" method="post">';
-        echo '<button type="submit">クリックして遷移</button>';
+        echo '<button type="submit">コミュニティ作成</button>';
         echo '</form>';
         foreach($pdo->query('select * from community') as $row){
-            echo $row['community_name'];
-            echo '<form action="community_top.php" method="post">';
-            echo '<input type="hidden" name="id" value="',$row['id'],'">';
-            echo '<button type="submit" class="button">コミュニティへ</button>';
-            echo '</form>';
+            $id=$row['community_id'];
+            echo '<h3><a href="community_top.php?id=', $id, '">', $row['community_name'], '</a></h3>';
         }
     ?>
 </body>

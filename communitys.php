@@ -9,7 +9,7 @@
 <body>
     <u><p>コミュニティ一覧</p></u>
     <?php
-        $pdo=new PDO($connect, USERNAME, PASS);
+        $pdo=new PDO($connect, USER, PASS);
         echo '<form action="community_create.php" method="post">';
         echo '<button type="submit">クリックして遷移</button>';
         echo '</form>';

@@ -1,3 +1,4 @@
+<?php session_start(); ?>
 <?php require 'db-connect.php'; ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -15,6 +16,7 @@
         echo '</form>';
         foreach($pdo->query('select * from community') as $row){
             $id=$row['community_id'];
+            echo '<p><img alt="image" src="../img/', $row['jpg'], '.jpg" height="100" width="120"></p>';
             echo '<h3><a href="community_top.php?id=', $id, '">', $row['community_name'], '</a></h3>';
         }
     ?>

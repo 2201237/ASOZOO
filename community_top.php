@@ -1,3 +1,4 @@
+<?php session_start(); ?>
 <?php require 'db-connect.php'; ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -14,6 +15,7 @@
         foreach ($sql as $row){
             $id=$row['community_id'];
             echo '<a href="community_chat.php?id=', $id, '"></a>';
+            echo '<p><img alt="image" src="../img/', $row['jpg'], '.jpg" height="100" width="120"></p>';
             echo '<form action="community.php" method="post">';
             echo '<tr><td><input type="submit" id="button5" value="参加する"></td>';
             echo '</form>';

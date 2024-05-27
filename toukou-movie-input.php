@@ -1,5 +1,3 @@
-<?php require "header.php" ?>
-<body>
     <center>
 <form enctype="multipart/form-data"  action="toukou-image-output.php" method="POST">
     <input type="hidden" name="name" value="value" />
@@ -22,6 +20,8 @@
     <p>
     <label>タグ</label>
     <input type="text" name="tag">
+    <ul></ul>
+    <button type="button" id="append">追加</button>
     </p>
 
 
@@ -30,6 +30,12 @@
 <input type="submit" value="投稿" />
 </form>
 </center>
+<script src="js/jquery-3.7.1.js"></script>
+<script>
+    $("#append").click(function(){
+	$('ul').append($('<li>'));
+    });
+</script>
 </body>
 </html>
 

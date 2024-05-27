@@ -6,6 +6,9 @@
 </head>
 <body>
 <header>
+
+  <script src="/assets/js/jquery-3.7.1.js"></script>
+
   <div class="header-inner">
     <img src="logo/logo.png" class="header-logo">
     <div class="search-container">
@@ -46,6 +49,3 @@
   <a href="#">Link 3</a>
   <!-- その他のメニュー項目 -->
 </div>
-
-</body>
-</html>

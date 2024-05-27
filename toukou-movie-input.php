@@ -19,8 +19,8 @@
 
     <p>
     <label>タグ</label>
-    <input type="text" name="tag">
-    <ul></ul>
+    <input type="text" name="tag" id="tagInput">
+    <ul id="tagList"></ul>
     <button type="button" id="append">追加</button>
     </p>
 
@@ -33,7 +33,11 @@
 <script src="js/jquery-3.7.1.js"></script>
 <script>
     $("#append").click(function(){
-	$('ul').append($('<li>'));
+        var tagValue = $("#tagInput").val();
+        if(tagValue) {
+            $("#tagList").append($('<li>').text(tagValue));
+            $("#tagInput").val('');
+        }
     });
 </script>
 </body>

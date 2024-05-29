@@ -48,20 +48,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $sql = $pdo->prepare('SELECT * FROM user WHERE user_id = ?');
         $sql->execute([$_SESSION['User']['user_id']]);
 
-        $tag = 1;
         $id=2;
         $cate = 1;
         $day = date('Y-m-d H:i:s'); // 現在の日付と時間を格納
 
         if (!empty($sql->fetchAll())) {
-            $sql = $pdo->prepare('INSERT INTO post (title, content, picture, link, post_day, tag_id, user_id, category_id) VALUES (?,?,?,?,?,?,?,?)');
+            $sql = $pdo->prepare('INSERT INTO post (title, content, picture, link, post_day, user_id, category_id) VALUES (?,?,?,?,?,?,?,?)');
             $sql->execute([
                 $_POST['title'],
                 $_POST['content'],
                 $file_name,
                 null,
                 $day,
-                $tag,
                 $id,
                 $cate
             ]);

@@ -1,5 +1,5 @@
     <center>
-<form enctype="multipart/form-data"  action="toukou-image-output.php" method="POST">
+<form enctype="multipart/form-data"  action="toukou-movie-output.php" method="POST">
     <input type="hidden" name="name" value="value" />
 
     <p>

@@ -13,11 +13,9 @@
 
 <?php 
 
-
-
 // データベース接続設定
 const HOST = 'mysql304.phy.lolipop.lan';
-const DBNAME = 'LAA1516821-asozoo;'; 
+const DBNAME = 'LAA1516821-asozoo'; 
 const USER = 'LAA1516821';
 const PASSWORD = 'Passpass';
 
@@ -33,15 +31,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
   $username = $_POST['username'];
   $password = password_hash($_POST['password'], PASSWORD_DEFAULT);
-  $address = $_POST['address'];
+  $mail_address = $_POST['mail_address'];
   $gender = $_POST['gender'];
 
-  $sql = "INSERT INTO U (user_name, pass, address, gender) VALUES (:username, :password, :address, :gender)";
+  $sql = "INSERT INTO user (user_name, pass, mail_address, gender) VALUES (:username, :password, :mail_address, :gender)";
   
   $stmt = $pdo->prepare($sql);
   $stmt->bindParam(':username', $username);
   $stmt->bindParam(':password', $password);
-  $stmt->bindParam(':address', $address);
+  $stmt->bindParam(':mail_address', $mail_address);
   $stmt->bindParam(':gender', $gender);
 
   if($stmt->execute()) {
@@ -54,7 +52,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 ?>
 
-
 <form method="post">
   <label>ユーザー名:</label>
   <input type="text" name="username">
@@ -63,20 +60,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   <input type="password" name="password">
 
   <label>メールアドレス:</label>
-  <input type="text" name="address">
+  <input type="text" name="mail_address">
 
   <label>性別:</label>
   <select name="gender">
-  <option value="1">男性</option>
-  <option value="2">女性</option>
-  <option value="3">その他</option>  
-</select>
-
+    <option value="1">男性</option>
+    <option value="2">女性</option>
+    <option value="3">その他</option>  
+  </select>
 
   <button type="submit">登録</button> 
 </form>
-
-
 
 </body>
 </html>

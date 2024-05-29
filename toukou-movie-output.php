@@ -1,6 +1,6 @@
 <?php ob_start(); ?>
 <?php session_start(); ?>
-<?php require 'db-connect.php' ?>
+<?php require 'db-connect.php'; ?>
 
 <?php
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -35,22 +35,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         echo $file_name . "をアップロードしました。";
     } else {
         echo "ファイルをアップロードできませんでした。";
+        exit;
     }
 
-    $filePath = 'https://zombie-aso2201177.webdav-lolipop.jp/Asozoo/img/' . $file_name;
-
-    // データベース接続情報の定義
-    
-   
+    // アップロードしたファイルのURL
+    $filePath = 'https://zombie-aso2201177.webdav-lolipop.jp/kaihatu2/img/' . $file_name;
 
     try {
         $pdo = new PDO($connect, USER, PASS);
+        $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
         $sql = $pdo->prepare('SELECT * FROM user WHERE user_id = ?');
         $sql->execute([$_SESSION['User']['user_id']]);
 
         $tag = 1;
-        $id=2;
-        $cate = 1;
+        $user_id = $_SESSION['User']['user_id'];
+        $category_id = 1;
         $day = date('Y-m-d H:i:s'); // 現在の日付と時間を格納
 
         if (!empty($sql->fetchAll())) {
@@ -58,16 +58,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $sql->execute([
                 $_POST['title'],
                 $_POST['content'],
-                $file_name,
+                $filePath,
                 null,
                 $day,
                 $tag,
-                $id,
-                $cate
+                $user_id,
+                $category_id
             ]);
+
             echo '<center>';
             echo '投稿しました';
-            echo '<meta http-equiv="refresh" content="10;url=login.php">';
+            echo '<meta http-equiv="refresh" content="10;url=home.php">';
             echo '10秒後に<a href="home.php">ホーム画面</a>へ戻ります';
             echo '</center>';
         } else {
@@ -82,4 +83,3 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 ?>
-<img src="../app/List.png" alt="画像">

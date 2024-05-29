@@ -6,26 +6,6 @@ body {
   color: #333;
 }
 
-/* Header Styles */
-header {
-  width: 80%;
-  margin: 0 auto;
-  padding: 20px 0;
-  background-color: #fff;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-.header-inner {
-  display: flex; 
-  justify-content: space-between;
-  align-items: center; 
-}
-
-.header-inner h1 {
-  font-size: 24px;
-  margin: 0;
-  color: #007bff;
-}
 
 /* Profile Container */
 .profile-container {

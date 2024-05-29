@@ -16,7 +16,7 @@
 
     <p>
     <label>コメント</label>
-    <input type="password" name="comment">
+    <input type="text" name="content">
     </p>
 
     <p>

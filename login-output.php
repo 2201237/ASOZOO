@@ -11,7 +11,7 @@ require "db-connect.php";
     unset($_SESSION['User']);
 
     $pdo = new PDO($connect, USER, PASS);
-    $sql = $pdo->prepare('select * from U where address=?');
+    $sql = $pdo->prepare('select * from user where mail_address=?');
     $sql->execute([$_POST['email']]);
     foreach ($sql as $row) {
 
@@ -19,10 +19,10 @@ require "db-connect.php";
 
         if (password_verify($_POST['password'], $row['pass']) == true) {
             $_SESSION['User'] = [
-                'user_id' => $row['user'],
+                'user_id' => $row['user_id'],
                 'user_name' => $row['user_name'],
                 'user_pass' => $row['pass'],
-                'user_address' => $row['address'],
+                'user_address' => $row['mail_address'],
                 'user_gender' => $row['gender'],
 
             ];

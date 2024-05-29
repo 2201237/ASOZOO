@@ -5,6 +5,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css/header.css">
+    <link rel="stylesheet" href="css/style.css">
     <title>コミュニティトップ</title>
 </head>
 <body>
@@ -20,7 +22,11 @@
         foreach ($sql as $row){
             $id=$row['community_id'];
             echo '<p><img alt="image" src="img/', $row['jpg'], '.jpg" height="100" width="120"></p>';
-            echo '<a href="community_insert.php?id=' . $id . '">参加する</a>';
+            $sql = $pdo->prepare('SELECT * FROM community_joinuser WHERE user_id=? AND community_id=?');
+            $sql->execute([$user_id,$_GET['id']]);
+            if($sql->rowCount() == 0){
+                echo '<a href="community_insert.php?id=' . $id . '">参加する</a>';
+            } 
             echo '<h1>', $row['community_name'], '</h1>';
             echo $row['exipo'];
             

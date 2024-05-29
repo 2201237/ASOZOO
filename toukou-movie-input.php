@@ -17,7 +17,7 @@
     <input type="text" name="content">
     </p>
 
-    <p>
+    <p id="tagform">
     <label>タグ</label>
     <input type="text" name="tag" id="tagInput">
     <ul id="tagList"></ul>
@@ -36,6 +36,7 @@
         var tagValue = $("#tagInput").val();
         if(tagValue) {
             $("#tagList").append($('<li>').text(tagValue));
+            $("#tagform").append($('<input type="hidden" name="tags[]">').val(tagValue));
             $("#tagInput").val('');
         }
     });

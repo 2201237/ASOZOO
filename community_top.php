@@ -32,7 +32,10 @@
             
 
 
-            echo '<a href="community_chat.php?id=', $id, '">チャットへ</a>';
+            echo '<form action="community_chat.php" method="post">';
+            echo '<input type="hidden" name="id" value="', $id, '">';
+            echo '<input type="submit" value="チャットへ" class="button">';
+            echo '</form>';
         }
     ?>
 

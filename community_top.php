@@ -21,7 +21,7 @@
         $sql->execute([$_GET['id']]);
         foreach ($sql as $row){
             $id=$row['community_id'];
-            echo '<p><img alt="image" src="img/', $row['jpg'], '.jpg" height="100" width="120"></p>';
+            echo '<p><img alt="image" src="img/', $row['jpg'], '.jpg" height="200" width="220"></p>';
             $sql = $pdo->prepare('SELECT * FROM community_joinuser WHERE user_id=? AND community_id=?');
             $sql->execute([$user_id,$_GET['id']]);
             if($sql->rowCount() == 0){

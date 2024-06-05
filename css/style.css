@@ -6,3 +6,11 @@ body {
 .member{
     width: auto;
 }
+
+img.image{
+    width: 220px;
+    height: 220px;
+    object-fit: none;
+    border-radius:50%;
+    object-position:70% 40%;
+}

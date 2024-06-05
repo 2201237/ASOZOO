@@ -30,7 +30,7 @@
             echo '<div class="frame">';
                 // 画像が存在するか確認して表示
                 if (!empty($images)) {
-                    echo '<img alt="image" src="' . $images[0] . '" height="100" width="120">';
+                    echo '<img class="image" alt="image" src="' . $images[0] . '" height="100" width="120">';
                 } else {
                     echo '<img alt="no image" src="img/no_image.jpg" height="100" width="120">';
                 }

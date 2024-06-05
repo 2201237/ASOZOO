@@ -5,6 +5,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css/header.css">
+    <link rel="stylesheet" href="css/style.css">
     <title>Document</title>
 </head>
 <body>
@@ -38,7 +40,7 @@
                     $stmt->execute([':id' => $id, ':user_id' => $user_id, ':record' => $record, ':chat_date' => $chat_date]);
                     // チャットの送信が成功した場合の処理
                     // チャットを再読み込みして表示するためのリダイレクト
-                     header("Location: test_a.php?id=".$id);
+                     header("Location: community_chat.php?id=".$id);
                     exit();
                 }
                 echo '<h1>チャット</h1>';

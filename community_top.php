@@ -21,16 +21,21 @@
         $sql->execute([$_GET['id']]);
         foreach ($sql as $row){
             $id=$row['community_id'];
-            echo '<p><img alt="image" src="img/', $row['jpg'], '.jpg" height="200" width="220"></p>';
+            echo '<div class="picture">';
+                echo '<p><img alt="image" src="img/', $row['jpg'], '.jpg" height="250" width="300"></p>';
+            echo '</div>';
             $sql = $pdo->prepare('SELECT * FROM community_joinuser WHERE user_id=? AND community_id=?');
             $sql->execute([$user_id,$_GET['id']]);
             if($sql->rowCount() == 0){
                 echo '<a href="community_insert.php?id=' . $id . '">参加する</a>';
             } 
             echo '<h1>', $row['community_name'], '</h1>';
-            echo $row['exipo'];
+            echo 'コミュニティの説明：',$row['exipo'];
             
-
+            echo '<form action="join_user.php" method="post">';
+            echo '<input type="hidden" name="community_id" value="',$id,'">';
+            echo '<input type="submit" value="参加メンバー" class="button">';
+            echo '</form>';
 
             echo '<form action="community_chat.php" method="post">';
             echo '<input type="hidden" name="id" value="', $id, '">';

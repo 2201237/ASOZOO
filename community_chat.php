@@ -21,7 +21,6 @@
             //ユーザーが指定されたコミュニティに参加しているかどうかを確認
           //echo $user_id;
            $id = $_POST['id'];
-           echo $id;
             $sql = "SELECT * FROM community_joinuser WHERE user_id = :user_id AND community_id = :id";
             $stmt = $pdo->prepare($sql);
             $stmt->bindParam(':id', $id);
@@ -62,10 +61,10 @@
                 if ($stmt->rowCount() > 0) {
                     while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
                         echo '<div class="chat-message">';
-                        if ($row['icon'] !== NULL) {
-                            echo '<a href="user_profile.php?user_id=' . $user_id . '"><img src="' . $row['icon'] . 'jpg" alt="User Icon"></a>';
+                        if (!empty($row['icon'])) {
+                            echo '<a href="user_profile.php?user_id=' . $user_id . '"><img class="chat" src="img/' . $row['icon'] . 'jpg" alt="User Icon" height="100" width="100"></a>';
                         }else{
-                            echo '<img src="default_icon.jpg" alt="Default Icon">';
+                            echo '<img class="chat" src="img/default_icon.jpg" alt="Default Icon" height="100" width="100">';
                         }
                         echo '<span class="username">' . $row['user_name'] . '</span>';
                         echo '<span class="timestamp">' . $row['chat_date'] . '</span>';

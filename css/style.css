@@ -14,3 +14,15 @@ img.image{
     border-radius:50%;
     object-position:70% 40%;
 }
+
+img.chat{
+    width: 100px;
+    height: 100px;
+    object-fit: none;
+    border-radius:50%;
+    object-position:50% 50%;
+}
+
+.picture{
+    text-align:center;
+}

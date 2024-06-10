@@ -33,7 +33,9 @@
           echo '登録に失敗しました'; 
           exit;
         }
-        
+        echo '<form action="communitys.php" method="post">';
+        echo '<input type="submit" value="一覧へ戻る" class="button2">';
+        echo '</form>';
         $sql=$pdo->prepare('select * from community where community_id=?');
         $sql->execute([$_GET['id']]);
     }else{

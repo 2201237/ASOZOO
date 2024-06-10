@@ -26,21 +26,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // cURLセッションを実行
     $response = curl_exec($ch);
+    $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
 
     // cURLセッションをクローズ
     curl_close($ch);
 
     // アップロードが成功したかどうかをチェック
-    if ($response) {
+    if ($response && $http_code === 201) {
         echo $file_name . "をアップロードしました。";
     } else {
         echo "ファイルをアップロードできませんでした。";
+        exit; // エラーの場合、以降の処理を中断
     }
 
     // ファイル名から拡張子を除いた部分を取得
     $fileNameWithoutExtension = pathinfo($file_name, PATHINFO_FILENAME);
 
-    $filePath = 'https://zombie-aso2201177.webdav-lolipop.jp/Asozoo/img/' . $file_name;
+    $filePath = 'https://zombie-aso2201177.webdav-lolipop.jp/kaihatu2/img/' . $file_name;
 
     $id = $_SESSION['User']['user_id'];
 
@@ -51,20 +53,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         $day = date('Y-m-d H:i:s'); // 現在の日付と時間を格納
 
-        if (!empty($sql->fetchAll())) {
+        if ($sql->fetch()) {
             $sql = $pdo->prepare('INSERT INTO community (community_name, exipo, jpg) VALUES (?, ?, ?)');
-
             $sql->execute([
                 $_POST['name'],
                 $_POST['exipo'],
                 $fileNameWithoutExtension // 拡張子を除いたファイル名を保存
             ]);
 
-            
-            $community_id=$pdo->query('select max(id) from community')->fetchColumn();
-            echo $community_id;
+            // 最後に挿入されたIDを取得
+            $community_id = $pdo->lastInsertId();
 
-            //community_joinuserに追加
+            // community_joinuserに追加
             $sql = $pdo->prepare('INSERT INTO community_joinuser (community_id, user_id) VALUES (?, ?)');
             $sql->execute([
                 $community_id,
@@ -87,4 +87,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 ?>
-<img src="../app/List.png" alt="画像">
+<form action="communitys.php" method="post">
+<input type="submit" value="一覧へ戻る" class="button2">
+</form>

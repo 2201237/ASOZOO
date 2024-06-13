@@ -1,5 +1,6 @@
 <?php session_start(); ?>
 <?php require 'db-connect.php'; ?>
+<?php require 'header.php'; ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -9,6 +10,40 @@
     <link rel="stylesheet" href="css/style.css">
     <title>コミュニティトップ</title>
 </head>
+<style>
+    .button1{
+        height:50px;
+        width: 100px;
+        text-align: center;
+        display:flex;
+        align-items: center;
+        justify-content: center;
+        background: #Fdd35c;
+        font-size:15px;
+    }
+
+    .button2{
+        height:50px;
+        width: 100px;
+        text-align: center;
+        display:flex;
+        align-items: center;
+        justify-content: center;
+        background: #66cdaa;
+        font-size:15px;
+    }
+
+    .button3{
+        height:50px;
+        width: 100px;
+        text-align: center;
+        display:flex;
+        align-items: center;
+        justify-content: center;
+        font-size:15px;
+        background: #c9c9c9;
+    }
+</style>
 <body>
     <?php
         if (isset($_SESSION['User']['user_id'])) {
@@ -34,18 +69,17 @@
             
             echo '<form action="join_user.php" method="post">';
             echo '<input type="hidden" name="community_id" value="',$id,'">';
-            echo '<input type="submit" value="参加メンバー" class="button">';
+            echo '<input type="submit"  value="参加メンバー" class="button1">';
             echo '</form>';
 
             echo '<form action="community_chat.php" method="post">';
             echo '<input type="hidden" name="id" value="', $id, '">';
-            echo '<input type="submit" value="チャットへ" class="button">';
+            echo '<input type="submit" value="チャットへ" class="button2">';
             echo '</form>';
         }
     ?>
-
     <form action="communitys.php" method="post">
-        <input type="submit" value="一覧へ戻る" class="button2">
+        <input type="submit" class="button3" value="一覧へ戻る" >
     </form>
 </body>
 </html>

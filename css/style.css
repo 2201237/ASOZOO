@@ -26,3 +26,23 @@ img.chat{
 .picture{
     text-align:center;
 }
+
+.user_inf{
+    display: flex;
+}
+
+.inf{
+    width: auto;
+}
+
+.frame{
+    text-align: center;
+}
+
+.community{
+    display: flex;
+}
+
+.com_inf{
+    width: auto;
+}

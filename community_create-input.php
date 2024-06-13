@@ -10,6 +10,29 @@
     <title>コミュニティ作成</title>
     <?php require 'header.php'; ?>
 </head>
+<style>
+    .button1{
+        height:50px;
+        width: 100px;
+        text-align: center;
+        display:flex;
+        align-items: center;
+        justify-content: center;
+        background: #Fdd35c;
+        font-size:15px;
+    }
+
+    .button3{
+        height:50px;
+        width: 100px;
+        text-align: center;
+        display:flex;
+        align-items: center;
+        justify-content: center;
+        font-size:15px;
+        background: #c9c9c9;
+    }
+</style>
 <body>
     <h2>コミュニティ創設！</h2>
    
@@ -23,9 +46,11 @@
                 <p>コミュニティの名称<input type="text" name="name" /></p>
                 <p>コミュニティの説明<textarea name="exipo"></textarea></p>
                 <p>
-                    <input type="submit" name="insert" value="登録へ" class="button">
-                    <input type="submit" name="return" value="戻る" class="button">
+                    <input type="submit" name="insert" value="登録へ" class="button1">
                 </p>
+            </form>
+            <form action="communitys.php" method="post">
+                <input type="submit" name="return" value="戻る" class="button3">
             </form>
     <?php
         } else {

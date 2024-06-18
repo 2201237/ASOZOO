@@ -6,7 +6,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="css/header.css">
-    <link rel="stylesheet" href="css/style.css">
     <title>コミュニティ一覧</title>
     <?php require 'header.php'; ?>
 </head>
@@ -26,6 +25,55 @@
         display: flex;
     /*コレ*/justify-content: flex-end;
     }
+
+    body {
+    background-color: #c3faf5c0; /* 背景色を薄いグレーに設定 */
+}
+
+
+.member{
+    width: auto;
+}
+
+img.image{
+    width: 220px;
+    height: 220px;
+    object-fit: none;
+    border-radius:50%;
+    object-position:70% 40%;
+}
+
+img.chat{
+    width: 100px;
+    height: 100px;
+    object-fit: none;
+    border-radius:50%;
+    object-position:50% 50%;
+}
+
+.picture{
+    text-align:center;
+}
+
+.user_inf{
+    display: flex;
+}
+
+.inf{
+    width: auto;
+}
+
+.frame{
+    text-align: center;
+}
+
+.community{
+    display: flex;
+}
+
+.com_inf{
+    width: auto;
+}
 
 </style>
 <body>

@@ -6,11 +6,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="css/header.css">
-    <link rel="stylesheet" href="css/style.css">
     <title>コミュニティ作成</title>
     <?php require 'header.php'; ?>
 </head>
 <style>
+    body {
+        background-color: #c3faf5c0; /* 背景色を薄いグレーに設定 */
+    }
+
     .button1{
         height:50px;
         width: 100px;

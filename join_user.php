@@ -27,12 +27,18 @@ img.image{
     object-position:70% 40%;
 }
 
-img.chat{
+img.def{
     width: 110px;
     height: 110px;
     object-fit: none;
     border-radius:50%;
     object-position:46% 50%;
+}
+
+img.chat{
+    width: 110px;
+    height: 110px;
+    border-radius:50%;
 }
 
 .picture{
@@ -70,6 +76,7 @@ img.chat{
         $pdo=new PDO($connect, USER, PASS);
         // $sql=$pdo->prepare('select * from community_joinuser where community_id=?');
         $id=$_POST['community_id'];
+        echo '<a href="community_top.php?id=', htmlspecialchars($id), '" class="back-link">← 戻る</a>';
         //コミュニティの名前を取ってくる
         $SQL = $pdo  ->prepare('select community_name,jpg from community where community_id=?');
         $SQL->execute([$id]);
@@ -98,7 +105,7 @@ img.chat{
                 if (!empty($inf['icon'])){
                     echo '<a href="user_profile.php?user_id=' . $user_id . '"><img class="chat" src="icon/' . $inf['icon'] . '.jpg" alt="User Icon" height="100" width="100"></a>';
                 }else{
-                    echo '<a href="user_profile.php?user_id=' . $user_id . '"><img class="chat" src="icon/default_top.jpg" alt="Default Icon" height="100" width="100"></a>';
+                    echo '<a href="user_profile.php?user_id=' . $user_id . '"><img class="def" src="icon/default_top.jpg" alt="Default Icon" height="100" width="100"></a>';
                 }
                 echo '<div class="inf">';
                     echo '<a href="user_profile.php?user_id=' . $user_id . '">' . $inf['user_name'] . '</a><br>';

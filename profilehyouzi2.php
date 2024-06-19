@@ -46,7 +46,14 @@ try {
     <p>メールアドレス: <?php echo htmlspecialchars($user['mail_address'], ENT_QUOTES, 'UTF-8'); ?></p>
     <p>性別: <?php echo htmlspecialchars($user['gender'], ENT_QUOTES, 'UTF-8'); ?></p>
     <!-- 自己紹介の表示を追加 -->
-    <p>自己紹介: <?php echo htmlspecialchars($user['introduction'], ENT_QUOTES, 'UTF-8'); ?></p>
+    <p>自己紹介: 
+        <?php 
+            if(empty($user['introduction'])){
+                echo '紹介がありません。';
+            }else{
+                echo $user['introduction'];
+            } 
+        ?></p>
     
     <a href="home.php">ホームに戻る</a> 
     <a href="profile-update.php">プロフィールを更新する</a> 

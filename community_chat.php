@@ -1,5 +1,7 @@
-<?php session_start(); ?>
-<?php require 'db-connect.php'; ?>
+<?php 
+session_start(); 
+require 'db-connect.php'; 
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -7,19 +9,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="css/header.css">
     <link type="text/css" rel="stylesheet" href="css/bmesse.css" />
-    <title>Document</title>
-</head>
+    <title>Community Chat</title>
     <style>
-        <style>
         body {
             font-family: Arial, sans-serif;
             justify-content: center;
             align-items: center;
-            background-color: #f0f0f0;
         }
         .chat-container {
             height: 500px;
-            overflow-y: auto; /* スクロール可能にする */
+            overflow-y: auto;
             background-color: #e5e5e5;
             border-radius: 10px;
             padding: 10px;
@@ -93,9 +92,7 @@
         img.chat {
             width: 40px;
             height: 40px;
-            object-fit: none;
             border-radius: 50%;
-            object-position: 50% 50%;
         }
         .my_timestamp {
             text-align: right;
@@ -108,101 +105,115 @@
         .frame {
             text-align: center;
         }
+        .center-message {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            color: black;
+            font-size: 18px;
+        }
+        .back-link {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            font-size: 14px;
+            text-decoration: none;
+            color: #007bff;
+            background-color: #a0eefc;
+            padding: 5px 10px;
+            border-radius: 5px;
+        }
+        .back-link:hover {
+            background-color: #ffffff;
+        }
     </style>
+</head>
 <body>
-    
     <?php
         $pdo = new PDO($connect, USER, PASS);
+
+        $id = $_POST['id'];
+        $sql = $pdo->prepare("SELECT community_name FROM community WHERE community_id = ?");
+        $sql->execute([$id]);
+        echo '<div class="frame">';
+        foreach($sql as $com){
+            echo '<h1>', $com['community_name'], '</h1>';
+        }
+        echo '</div>';
+
+        $sql = "SELECT * FROM community_joinuser WHERE user_id = :user_id AND community_id = :id";
         if (isset($_SESSION['User']['user_id'])) {
             $user_id = $_SESSION['User']['user_id'];
-
-            $id = $_POST['id'];
-            $sql = $pdo->prepare("select community_name from community where community_id=?");
-            $sql->execute([$id]);
-            echo '<div class="frame">';
-            foreach($sql as $com){
-                echo '<h1>', $com['community_name'], '</h1>';
-            }
-            echo '</div>';
-
-            $sql = "SELECT * FROM community_joinuser WHERE user_id = :user_id AND community_id = :id";
             $stmt = $pdo->prepare($sql);
             $stmt->bindParam(':id', $id);
             $stmt->bindParam(':user_id', $user_id);
             $stmt->execute();
+            $is_user_in_community = $stmt->rowCount() > 0;
+        } else {
+            $is_user_in_community = false;
+        }
 
-            if ($stmt->rowCount() > 0) {
-                if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['chat_submit'])) {
-                    $record = $_POST['record'];
-                    $chat_date = date("Y-m-d H:i:s");
-                    $sql = "INSERT INTO chat (community_id, user_id, record, chat_date)
-                            VALUES (:id, :user_id, :record, :chat_date)";
-                    $stmt = $pdo->prepare($sql);
-                    $stmt->execute([':id' => $id, ':user_id' => $user_id, ':record' => $record, ':chat_date' => $chat_date]);
-                }
-
-                $sql = "SELECT chat.record, chat.chat_date, user.user_id, user.user_name, user.icon
-                        FROM chat
-                        INNER JOIN user ON chat.user_id = user.user_id
-                        WHERE chat.community_id = :id
-                        ORDER BY chat.chat_date ASC";
+        // チャット送信フォームを表示する条件を修正
+        if ($is_user_in_community) {
+            if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['chat_submit'])) {
+                $record = $_POST['record'];
+                $chat_date = date("Y-m-d H:i:s");
+                $sql = "INSERT INTO chat (community_id, user_id, record, chat_date)
+                        VALUES (:id, :user_id, :record, :chat_date)";
                 $stmt = $pdo->prepare($sql);
-                $stmt->execute([':id' => $id]);
-
-                if ($stmt->rowCount() > 0) {
-                    echo '<div class="chat-container" id="chat-container">';
-                    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-                        if ($user_id == $row['user_id']) {
-                            echo '<div class="chat-message message-right">';
-                            echo '<div class="message-bubble">' . $row['record'] . '</div>';
-                            echo '</div>';
-                            echo '<div class="my_timestamp">' . $row['chat_date'] . '</div><br>';
-                        } else {
-                            echo '<div class="chat-message message-left">';
-                            if (!empty($row['icon'])) {
-                                echo '<a class="message-avatar" href="user_profile.php?user_id=' . $user_id . '"><img class="chat" src="icon/' . $row['icon'] . 'jpg" alt="User Icon"></a>';
-                            } else {
-                                echo '<a class="message-avatar" href="profile.php2?user_id=' . $user_id . '"><img class="chat" src="icon/default_icon.jpg" alt="Default Icon"></a>';
-                            }
-                            echo '<div class="message-bubble">' . $row['record'] . '</div>';
-                            echo '</div>';
-                            echo '<div class="timestamp">' . $row['chat_date'] . '</div>';
-                        }
-                    }
-                    echo '</div>';
-                }
+                $stmt->execute([':id' => $id, ':user_id' => $user_id, ':record' => $record, ':chat_date' => $chat_date]);
             }
         }
+
+        $sql = "SELECT chat.record, chat.chat_date, user.user_id, user.user_name, user.icon
+                FROM chat
+                INNER JOIN user ON chat.user_id = user.user_id
+                WHERE chat.community_id = :id
+                ORDER BY chat.chat_date ASC";
+        $stmt = $pdo->prepare($sql);
+        $stmt->execute([':id' => $id]);
+
+        if ($stmt->rowCount() > 0) {
+            echo '<div class="chat-container" id="chat-container">';
+            echo '<a href="community_top.php?id=', htmlspecialchars($id), '" class="back-link">← 戻る</a>';
+            while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                if (isset($_SESSION['User']['user_id']) && $_SESSION['User']['user_id'] == $row['user_id']) {
+                    echo '<div class="chat-message message-right">';
+                    echo '<div class="message-bubble">' . $row['record'] . '</div>';
+                    echo '</div>';
+                    echo '<div class="my_timestamp">' . $row['chat_date'] . '</div><br>';
+                } else {
+                    echo '<div class="chat-message message-left">';
+                    if (!empty($row['icon'])) {
+                        echo '<a class="message-avatar" href="user_profile.php?user_id=' . $row['user_id'] . '"><img class="chat" src="icon/' . $row['icon'] . '" alt="User Icon"></a>';
+                    } else {
+                        echo '<a class="message-avatar" href="profile.php2?user_id=' . $row['user_id'] . '"><img class="chat" src="icon/default_icon.jpg" alt="Default Icon"></a>';
+                    }
+                    echo '<div class="message-bubble">' . $row['record'] . '</div>';
+                    echo '</div>';
+                    echo '<div class="timestamp">' . $row['chat_date'] . '</div>';
+                }
+            }
+            echo '</div>';
+        }
     ?>
-    
+
+    <?php if (isset($_SESSION['User']['user_id']) && $is_user_in_community): ?>
     <div id="bms_send">
         <form action="community_chat.php" method="post">
-            <input type="hidden" name="id" value="1">
+            <input type="hidden" name="id" value="<?php echo htmlspecialchars($id); ?>">
             <textarea id="bms_send_message" name="record" placeholder="コメントを入力してください"></textarea>
             <div id="bms_send_btn">
-                <?php
-                if (isset($_SESSION['User']['user_id'])) {
-                    $user_id = $_SESSION['User']['user_id'];
-                    $sql = "SELECT * FROM community_joinuser WHERE user_id = :user_id AND community_id = :id";
-                    $stmt = $pdo->prepare($sql);
-                    $stmt->bindParam(':id', $id);
-                    $stmt->bindParam(':user_id', $user_id);
-                    $stmt->execute();
-
-                    if ($stmt->rowCount() > 0) {
-                        echo '<input type="submit" name="chat_submit" value="投稿">';
-                    } else {
-                        echo '</div>';
-                        echo '<br><br><p>チャットに参加するにはこのコミュニティに参加する必要があります。</p>';
-                    }
-                } else {
-                    echo '</div>';
-                    echo '<br><br><p>チャットに参加するにはログインしてください。</p>';
-                }
-                ?>
+                <input type="submit" name="chat_submit" value="投稿">
             </div>
         </form>
     </div>
+    <?php elseif (isset($_SESSION['User']['user_id'])): ?>
+    <div class="center-message"><p>チャットを送信するにはコミュニティに参加してください。</p></div>
+    <?php else: ?>
+    <div class="center-message"><p>ログインしてください。</p></div>
+    <?php endif; ?>
 
     <script>
         document.addEventListener('DOMContentLoaded', (event) => {

@@ -1,78 +1,120 @@
-<?php ob_start(); ?>
-<?php session_start(); ?>
-<?php require 'db-connect.php' ?>
-
 <?php
+ob_start();
+session_start();
+require 'db-connect.php';
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    // CSRFトークンの検証
+    if (!isset($_POST['csrf_token']) || $_POST['csrf_token'] !== $_SESSION['csrf_token']) {
+        echo '不正なリクエストです。';
+        exit();
+    }
+
+    // 一度使ったトークンは無効にする
+    unset($_SESSION['csrf_token']);
+
     $file_path = $_FILES['user_file_name']['tmp_name']; // 一時ファイルのパス
     $file_name = $_FILES['user_file_name']['name']; // ファイル名
 
-    $webdav_url = 'https://zombie-aso2201177.webdav-lolipop.jp/kaihatu2/img/' . $file_name; // アップロード先URL
-    $username = 'zombie.jp-aso2201177'; // WebDAVサーバーのユーザー名
-    $password = 'Pass0109'; // WebDAVサーバーのパスワード
-
-    // cURLセッションを初期化
-    $ch = curl_init();
-
-    // アップロードするファイルを指定
-    curl_setopt($ch, CURLOPT_URL, $webdav_url);
-    curl_setopt($ch, CURLOPT_PUT, 1);
-    curl_setopt($ch, CURLOPT_INFILE, fopen($file_path, 'r'));
-    curl_setopt($ch, CURLOPT_INFILESIZE, filesize($file_path));
-
-    // ベーシック認証情報を設定
-    curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
-    curl_setopt($ch, CURLOPT_USERPWD, $username . ':' . $password);
-
-    // cURLセッションを実行
-    $response = curl_exec($ch);
-
-    // cURLセッションをクローズ
-    curl_close($ch);
-
-    // アップロードが成功したかどうかをチェック
-    if ($response) {
-        echo $file_name . "をアップロードしました。";
-    } else {
-        echo "ファイルをアップロードできませんでした。";
-    }
-
-    $filePath = 'https://zombie-aso2201177.webdav-lolipop.jp/Asozoo/img/' . $file_name;
-
-    // データベース接続情報の定義
-    
-   
+    // データベースに接続し、投稿を処理
+    $user_id = $_SESSION['User']['user_id'];
 
     try {
         $pdo = new PDO($connect, USER, PASS);
-        $sql = $pdo->prepare('SELECT * FROM user WHERE user_id = ?');
-        $sql->execute([$_SESSION['User']['user_id']]);
 
-        $tag = 1;
-        $id=2;
-        $cate = 1;
-        $day = date('Y-m-d H:i:s'); // 現在の日付と時間を格納
+        // ユーザー情報のチェックと投稿処理
+        $stmt = $pdo->prepare('SELECT * FROM user WHERE user_id = ?');
+        $stmt->execute([$user_id]);
 
-        if (!empty($sql->fetchAll())) {
-            $sql = $pdo->prepare('INSERT INTO post (title, content, picture, link, post_day, tag_id, user_id, category_id) VALUES (?,?,?,?,?,?,?,?)');
-            $sql->execute([
-                $_POST['title'],
-                $_POST['content'],
-                $file_name,
-                null,
-                $day,
-                $tag,
-                $id,
-                $cate
-            ]);
+        if ($stmt->rowCount() > 0) {
+            // ユーザーが存在する場合、投稿を処理
+            $post_title = $_POST['title'];
+            $post_content = $_POST['content'];
+            $post_day = date('Y-m-d H:i:s');
+            $category_id = 0; // 仮でカテゴリーIDを設定
+
+            // 投稿をデータベースに挿入
+            $sql = $pdo->prepare('INSERT INTO post (title, content, picture, link, post_day, user_id, category_id) VALUES (?, ?, ?, ?, ?, ?, ?)');
+            $sql->execute([$post_title, $post_content, '', null, $post_day, $user_id, $category_id]);
+
+            // 最後に挿入された投稿のIDを取得
+            $post_id = $pdo->lastInsertId();
+
+            // 新しい画像名を post_id.png として設定
+            $new_file_name = $post_id . '.png';
+            $webdav_url = 'https://zombie-aso2201177.webdav-lolipop.jp/kaihatu2/img/' . $new_file_name;
+            $username = 'zombie.jp-aso2201177'; // WebDAVサーバーのユーザー名
+            $password = 'Pass0109'; // WebDAVサーバーのパスワード
+
+            // cURLセッションを初期化
+            $ch = curl_init();
+
+            // アップロードするファイルを指定
+            curl_setopt($ch, CURLOPT_URL, $webdav_url);
+            curl_setopt($ch, CURLOPT_PUT, 1);
+            curl_setopt($ch, CURLOPT_INFILE, fopen($file_path, 'r'));
+            curl_setopt($ch, CURLOPT_INFILESIZE, filesize($file_path));
+
+            // ベーシック認証情報を設定
+            curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
+            curl_setopt($ch, CURLOPT_USERPWD, $username . ':' . $password);
+
+            // cURLセッションを実行
+            $response = curl_exec($ch);
+
+            // cURLセッションをクローズ
+            curl_close($ch);
+
+            // アップロードが成功したかどうかをチェック
+            if ($response) {
+                echo $new_file_name . "をアップロードしました。";
+
+                // postテーブルのpicture列を更新
+                $sql = $pdo->prepare('UPDATE post SET picture = ? WHERE post_id = ?');
+                $sql->execute([$new_file_name, $post_id]);
+
+            } else {
+                echo "ファイルをアップロードできませんでした。";
+            }
+
+            // タグの処理（例）
+            if (isset($_POST['tags']) && is_array($_POST['tags'])) {
+                foreach ($_POST['tags'] as $tag_name) {
+                    // タグが既に存在するか確認
+                    $sql = $pdo->prepare('SELECT tag_id FROM tag WHERE tag_name = ?');
+                    $sql->execute([$tag_name]);
+
+                    if ($sql->rowCount() > 0) {
+                        // タグが既に存在する場合、そのIDを取得
+                        $tag_id = $sql->fetchColumn();
+                        // タグのカウントを+1
+                        $sql = $pdo->prepare('UPDATE tag SET count = count + 1 WHERE tag_id = ?');
+                        $sql->execute([$tag_id]);
+                    } else {
+                        // タグが存在しない場合、新規挿入
+                        $sql = $pdo->prepare('INSERT INTO tag (tag_name, count) VALUES (?, 1)');
+                        $sql->execute([$tag_name]);
+                        $tag_id = $pdo->lastInsertId();
+                    }
+
+                    // タグマップに挿入
+                    $sql = $pdo->prepare('INSERT INTO tag_map (tag_id, post_id) VALUES (?, ?)');
+                    $sql->execute([$tag_id, $post_id]);
+                }
+            }
+
+            // nice_postテーブルにデータを挿入（例）
+            $sql = $pdo->prepare('INSERT INTO nice_post (post_id, nice_point) VALUES (?, ?)');
+            $sql->execute([$post_id, 0]); // 初期値として0を設定
+
             echo '<center>';
-            echo '投稿しました';
-            echo '<meta http-equiv="refresh" content="10;url=login.php">';
+            echo '投稿しました<br>';
+            echo '<meta http-equiv="refresh" content="10;url=home.php">';
             echo '10秒後に<a href="home.php">ホーム画面</a>へ戻ります';
             echo '</center>';
         } else {
             echo '<center>';
-            echo '入力エラーがあります';
+            echo '入力エラーがあります<br>';
             echo '<meta http-equiv="refresh" content="10;url=touroku-output.php">';
             echo '10秒後に<a href="tourokuAll.php">新規登録画面</a>へ戻ります';
             echo '</center>';
@@ -82,4 +124,3 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 ?>
-<img src="../app/List.png" alt="画像">

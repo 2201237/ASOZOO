@@ -1,10 +1,10 @@
+<?php ob_start(); // バッファリングを開始します ?>
 <!DOCTYPE html>
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="css/header.css">
-    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/touroku.css">
     <title>Document</title>
 </head>
 <body>
@@ -12,6 +12,7 @@
 <?php require "header.php";  ?>
 
 <?php 
+
 
 // データベース接続設定
 const HOST = 'mysql304.phy.lolipop.lan';
@@ -34,42 +35,56 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   $mail_address = $_POST['mail_address'];
   $gender = $_POST['gender'];
 
-  $sql = "INSERT INTO user (user_name, pass, mail_address, gender) VALUES (:username, :password, :mail_address, :gender)";
-  
+  // メールアドレスの重複チェック
+  $sql = "SELECT COUNT(*) FROM user WHERE mail_address = :mail_address";
   $stmt = $pdo->prepare($sql);
-  $stmt->bindParam(':username', $username);
-  $stmt->bindParam(':password', $password);
   $stmt->bindParam(':mail_address', $mail_address);
-  $stmt->bindParam(':gender', $gender);
+  $stmt->execute();
+  $count = $stmt->fetchColumn();
 
-  if($stmt->execute()) {
-    echo '登録に成功しました!';
+  if ($count > 0) {
+    echo "このメールアドレスは既に登録されています。別のメールアドレスを使ってください。";
   } else {
-    echo '登録に失敗しました'; 
+    $sql = "INSERT INTO user (user_name, pass, mail_address, gender) VALUES (:username, :password, :mail_address, :gender)";
+    $stmt = $pdo->prepare($sql);
+    $stmt->bindParam(':username', $username);
+    $stmt->bindParam(':password', $password);
+    $stmt->bindParam(':mail_address', $mail_address);
+    $stmt->bindParam(':gender', $gender);
+
+    if($stmt->execute()) {
+      header("Location: login-input.php"); // リダイレクトを行います
+      exit(); // リダイレクト後にスクリプトの実行を停止します
+    } else {
+      echo '登録に失敗しました'; 
+    }
   }
 
 }
 
+ob_end_flush(); // バッファリングを終了し、出力を送信します
 ?>
 
-<form method="post">
+<form name="tourokuform" method="post">
+
+  <h2>新規登録</h2>
   <label>ユーザー名:</label>
-  <input type="text" name="username">
+  <input type="text" name="username" required>
 
   <label>パスワード:</label>
-  <input type="password" name="password">
+  <input type="password" name="password" required>
 
   <label>メールアドレス:</label>
-  <input type="text" name="mail_address">
+  <input type="text" name="mail_address" required>
 
   <label>性別:</label>
-  <select name="gender">
+  <select name="gender" required>
     <option value="1">男性</option>
     <option value="2">女性</option>
     <option value="3">その他</option>  
   </select>
 
-  <button type="submit">登録</button> 
+  <button name="touroku" type="submit">登録</button> 
 </form>
 
 </body>

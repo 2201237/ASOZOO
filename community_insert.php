@@ -6,9 +6,17 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="css/header.css">
-  <link rel="stylesheet" href="css/style.css">
+  <!-- <link rel="stylesheet" href="css/style.css"> -->
   <title>Document</title>
 </head>
+<style>
+  .button2{
+    background: #c9c9c9;
+    height: 60px;
+    width: 120px;
+    font-size: 15px;
+  }
+</style>
 <body>
 <?php
 
@@ -28,14 +36,14 @@
 
         if($stmt->execute()) {
           echo '登録に成功しました!';
-          exit;
+          echo '<form action="community_top.php" method="get">';
+          echo '<input type="hidden" name="id" value="' . $_GET['id'] . '">';
+          echo '<input type="submit" value="コミュニティへ" class="button2">';
+          echo '</form>';
+          exit();
         } else {
           echo '登録に失敗しました'; 
-          exit;
         }
-        
-        $sql=$pdo->prepare('select * from community where community_id=?');
-        $sql->execute([$_GET['id']]);
     }else{
         echo 'ログインしてください';
     }

@@ -1,0 +1,152 @@
+body, html {
+  margin: 0;
+  padding: 0;
+  background-color: #cef6f6;
+}
+
+header {
+  width: 100%;
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+  background-color: #a0e8fc;
+}
+
+.header-inner {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.search-container {
+  width: 50%;
+  margin: 0 auto;
+}
+
+.search-form {
+  display: flex;
+}
+
+.search-bar {
+  width: 80%;
+  padding: 8px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.search-btn {
+  width: 20%;
+  padding: 12px;
+  font-size: 16px;
+  background: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 0 4px 4px 0;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.search-btn:hover {
+  background: #0056b3;
+}
+
+.auth {
+  width: 20%;
+  display: flex;
+  justify-content: space-between;
+  margin: 0 auto;
+}
+
+.auth button {
+  padding: 8px 12px;
+  background: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+}
+
+.navigation-menu {
+  width: 100%;
+}
+
+.navigation-menu ul {
+  list-style: none;
+  display: flex;
+  justify-content: center;
+  padding: 0;
+  margin: 0; /* ここも追加してみてください */
+}
+
+.navigation-menu a {
+  color: #000000;
+  text-decoration: none;
+  padding: 12px 16px;
+  display: block;
+}
+
+/* 768px以下に適用 */
+@media screen and (max-width: 768px) {
+  .navigation-menu {
+      width: 100%;
+      position: absolute;
+      top: 60px;
+      left: 0;
+      background: #333;
+      display: none;
+  }
+
+  .navigation-menu ul {
+      width: 100%;
+      flex-direction: column;
+  }
+
+  .navigation-menu.active {
+      display: block;
+  }
+}
+
+/* ハンバーガーメニューのスタイル */
+.sidebar {
+  height: 100%;
+  width: 0;
+  position: fixed;
+  z-index: 1;
+  top: 0;
+  right: 0;
+  background-color: #111;
+  overflow-x: hidden;
+  transition: 0.5s;
+  padding-top: 60px;
+}
+
+.sidebar a {
+  padding: 10px 15px;
+  text-decoration: none;
+  font-size: 25px;
+  color: #818181;
+  display: block;
+  transition: 0.3s;
+}
+
+.sidebar a:hover {
+  color: #f1f1f1;
+}
+
+.header-logo {
+  height: 80px;
+  width: auto;
+  margin-right: 20px;
+  float: left;
+}
+a:hover {
+  background-color: #67e6ff;
+}
+.atag {
+  display: inline-block;
+  margin: 10px;
+  padding: 10px 20px;
+  font-size: 1em;  
+  text-decoration: none;
+  border-radius: 5px;
+  transition: background-color 0.3s ease; 
+}
